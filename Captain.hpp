@@ -1,10 +1,16 @@
-#include "Role.hpp"
+#include "Player.hpp"
+#include "Game.hpp"
+
+#include <iostream>
 
 namespace coup {
-    class Captain : public Role{
+    class Captain : public Player{
 
         public:
-            Captain(Game, std::string);
+            using Player::Player;
+            //Captain(Game, std::string);
+            void steal(Player); /*overridng*/
+            //CAN BLOCK STEAL -- TODO --
     };
 
 }
