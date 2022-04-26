@@ -109,6 +109,7 @@ int main() {
 	players = game_1.players();
 	/*
 		prints:
+		Moshe
 		Yossi
 		Meirav
 		Reut
