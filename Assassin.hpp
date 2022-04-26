@@ -1,11 +1,15 @@
-#include "Role.hpp"
+#include "Player.hpp"
+#include "Game.hpp"
+
+#include <iostream>
 
 namespace coup {
-    class Assassin : public Role {
+    class Assassin : public Player {
 
         public:
-            Assassin(Game, std::string);
-
+            using Player::Player;
+            //Assassin(Game, std::string);
+            void coup(Player); /*overridng*/
     };
 
 }

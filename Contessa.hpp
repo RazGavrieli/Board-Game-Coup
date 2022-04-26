@@ -1,10 +1,14 @@
-#include "Role.hpp"
+#include "Player.hpp"
+#include "Game.hpp"
 
+#include <iostream>
 namespace coup {
-    class Contessa : public Role {
+    class Contessa : public Player {
 
         public:
-            Contessa(Game, std::string);
+            using Player::Player;
+            //Contessa(Game, std::string);
+            //CAN BLOCK ASSASINATION
     };
 
 }
