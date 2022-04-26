@@ -5,14 +5,12 @@
  * @since: 2022-02
  */
 
-//#include "Player.hpp"
-#include "Game.hpp"
+#include "Player.hpp"
 #include "Duke.hpp"
 #include "Assassin.hpp"
 #include "Ambassador.hpp"
 #include "Captain.hpp"
 #include "Contessa.hpp"
-#include "Game.hpp"
 
 using namespace coup;
 
@@ -58,21 +56,21 @@ int main() {
 	contessa.income();
 
 	// throws exception, it is duke's turn now
-	assassin.income();
+	try {assassin.income();} catch(const std::exception&){};
 
 	duke.income();
 	assassin.foreign_aid();
 
 	// throws exception, the last operation duke performed
 	// is income, which cannot be blocked by any role
-	captain.block(duke);
+	try {captain.block(duke); } catch (const std::exception&) {};
 
 	cout << duke.coins() << endl; // prints 2
 	cout << assassin.coins() << endl; // prints 3
 
 	// throws exception, the last operation duke performed
 	// is foreign aid, which cannot be blocked by contessa
-	contessa.block(assassin);
+	try{contessa.block(assassin);} catch (const std::exception&) {}
 
 	duke.block(assassin);
 	cout << assassin.coins() << endl; // prints 1
@@ -109,7 +107,6 @@ int main() {
 	players = game_1.players();
 	/*
 		prints:
-		Moshe
 		Yossi
 		Meirav
 		Reut
@@ -120,4 +117,3 @@ int main() {
 		cout << name << endl;
 	}
 }
-

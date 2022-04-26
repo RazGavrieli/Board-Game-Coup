@@ -8,16 +8,19 @@
 
 namespace coup {
     class Game {
-        std::vector<Player> onlinePlayers;
-        Player playerTurn; 
+        std::vector<Player*> onlinePlayers;
+        Player *playerTurn; 
         bool gameRunning;
         
         public:
             Game();
-            void addPlayer(Player);
+            //~Game();
+            void addPlayer(Player*);
             void removePlayer(Player);
             std::vector<std::string> players(); 
             std::string turn(); 
+            Player* turnPlayer();
+            void nextTurn();
             std::string winner();
     };
 

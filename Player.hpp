@@ -9,17 +9,23 @@ namespace coup
     class Player {
         int amountOfCoins;
         std::string nickname;
+        Game *currGame;
 
         public:   
         Player();
-        Player(Game, std::string);
+        Player(Game &, std::string);
 
+        Game* getCurrGame();
         std::string getNickname();
+        void incrementCoins(int);
+        bool isPlaying();
+
         int coins();
         void income();
         void foreign_aid();
         void coup(Player); // overridden by assassin
-        
+        // std::string role(); // STILL NEEDS IMPLEMENTATION -- TODO --
+
         /*specific role actions (these function are overridden by the relevant role)*/ 
         void transfer(Player, Player);
         void tax();
