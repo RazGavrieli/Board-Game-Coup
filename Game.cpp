@@ -3,8 +3,6 @@
 using namespace coup;
 
 Game::Game() {
-    std::cout << "HERE\n";
-    // idk -- TODO --
     gameRunning = false;
     playerTurn = nullptr;
 }
@@ -14,6 +12,18 @@ Game::Game() {
 //     //onlinePlayers->resize(0);
 //     //delete onlinePlayers;
 // }
+
+void Game::revivePlayer(Player *revivedPlayer) {
+    //ADD REVIVE PLAYER IMPLEMENTATION -- TODO --
+    //THIS FUNCTION IS CALLED WHEN CONTESSA SAVES A PLAYER
+    for (size_t i = 0; i < onlinePlayers.size(); i++)
+    {
+        if (onlinePlayers.at(i)==nullptr) {
+            onlinePlayers[i] = revivedPlayer;
+        }
+    }
+    
+}
 
 void Game::addPlayer(Player *newPlayer) {
     if(gameRunning) {
@@ -25,26 +35,46 @@ void Game::addPlayer(Player *newPlayer) {
     onlinePlayers.push_back(newPlayer);
 }
 
-void Game::removePlayer(Player losingPlayer) {
+bool Game::checkForWin() {
+    size_t numOfplayers = 0;
     for (size_t i = 0; i < onlinePlayers.size(); i++)
     {
-        // SEARCH FOR THE losingPlayer IN onlinePlayers -- TODO --
+        if (onlinePlayers.at(i)!=nullptr) {
+            numOfplayers++;
+        }
+    }
+    
+    if (numOfplayers == 1) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+void Game::removePlayer(Player *losingPlayer) {
+    for (size_t i = 0; i < onlinePlayers.size(); i++)
+    {
+        if (onlinePlayers.at(i)==losingPlayer) {
+            std::cout << "Removing " << losingPlayer->getNickname() << " from the game!\n";
+            onlinePlayers[i] = nullptr;
+            break;
+        }
     }
 
-    
-    // AFTER REMOVAL OF THE PLAYER:
-    if (onlinePlayers.size() == 1) {
-        // THE ONLY PLAYER LEFT IS THE WINNER, ANNOUNCE IT -- TODO --
+    if (checkForWin()) {
+        // THERE IS A WINNER STOP THE GAME
         gameRunning = false;
     }
 }
 
 std::vector<std::string> Game::players() {
-    gameRunning = true;
+    gameRunning = true; // ADD BETTER IMPLEMENTATION OF GAME INITIATION -- TODO --
     std::vector<std::string> playerNicknames; 
     for (size_t i = 0; i < onlinePlayers.size(); i++)
     {
-        playerNicknames.push_back(onlinePlayers.at(i)->getNickname());
+        if (onlinePlayers.at(i)!=nullptr) {
+             playerNicknames.push_back(onlinePlayers.at(i)->getNickname());
+        }
     }
     return playerNicknames;
 }
@@ -58,10 +88,19 @@ Player* Game::turnPlayer() {
 }
 
 void Game::nextTurn() {
+    if (checkForWin()) {
+        //THERE IS A WINNER DO SOMETHING
+        gameRunning = false;
+    }
     size_t i = 0;
     while (onlinePlayers.at(i)!=playerTurn) i++;
     playerTurn = onlinePlayers.at(++i%onlinePlayers.size());
-    std::cout << "\t\t\tGAME MESSAGE: " << playerTurn->getNickname() << "'s turn\n";
+    if (playerTurn==nullptr) {
+        std::cout << "HERE";
+        nextTurn();
+        return;
+    }
+    std::cout << "\t\tGAME MESSAGE: " << playerTurn->getNickname() << "'s(" << playerTurn->role() << ") turn\n";
 }
 
 std::string Game::winner() {

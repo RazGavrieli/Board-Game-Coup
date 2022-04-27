@@ -10,27 +10,32 @@ namespace coup
         int amountOfCoins;
         std::string nickname;
         Game *currGame;
-
+        
+        
         public:   
-        Player();
-        Player(Game &, std::string);
+        bool didForeign_aid = false;
+        bool alive = true;
+            Player();
+            Player(Game &, std::string);
 
-        Game* getCurrGame();
-        std::string getNickname();
-        void incrementCoins(int);
-        bool isPlaying();
+            Game* getCurrGame();
+            std::string getNickname();
+            void incrementCoins(int);
+            bool isPlaying();
+            virtual void resetPlayer(); // to be called after every move except special blockable moves
 
-        int coins();
-        void income();
-        void foreign_aid();
-        void coup(Player); // overridden by assassin
-        // std::string role(); // STILL NEEDS IMPLEMENTATION -- TODO --
+            virtual std::string role();
+            int coins();
+            void income();
+            void foreign_aid();
+            virtual void coup(Player&);
+            // std::string role(); // STILL NEEDS IMPLEMENTATION -- TODO --
 
-        /*specific role actions (these function are overridden by the relevant role)*/ 
-        void transfer(Player, Player);
-        void tax();
-        void steal(Player);
-        void block(Player);
+            /*specific role actions (these function are overridden by the relevant role)*/ 
+            virtual void transfer(Player&, Player&);
+            virtual void tax();
+            virtual void steal(Player&);
+            virtual void block(Player&);
         
 
 

@@ -7,10 +7,13 @@ namespace coup {
     class Captain : public Player{
 
         public:
+        bool didSteal = false;
+        Player* stolenPlayer = nullptr;
             using Player::Player;
-            //Captain(Game, std::string);
-            void steal(Player); /*overridng*/
-            //CAN BLOCK STEAL -- TODO --
+            void steal(Player&) override; 
+            void block(Player&) override;
+            void resetPlayer () override;
+            std::string role() override;
     };
 
 }

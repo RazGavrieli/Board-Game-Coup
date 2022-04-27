@@ -31,6 +31,12 @@ bool Player::isPlaying() {
     return true;
 }
 
+void Player::resetPlayer() {
+    didForeign_aid = false;
+}
+
+std::string Player::role() {     return "This player still has no role";}
+
 int Player::coins() {  return this->amountOfCoins;}
 
 void Player::income() {
@@ -42,6 +48,7 @@ void Player::income() {
     }
     
     incrementCoins(1);
+    resetPlayer();
     currGame->nextTurn();
 }
 
@@ -55,21 +62,24 @@ void Player::foreign_aid() {
 
     // ADD IMPLEMENTATION OF BLOCKING FOREGIN AID -- TODO --
     incrementCoins(2);
+    resetPlayer();
+    didForeign_aid = true;
     currGame->nextTurn();
 }
 
-void Player::coup(Player coup) {
+void Player::coup(Player &coup) {
     if (!isPlaying()) {
         throw std::runtime_error("this isn't the player's turn!");
     }
     if (this->amountOfCoins<7) {
         throw std::runtime_error("Not enough coins");
     }
-    currGame->removePlayer(coup);
+    currGame->removePlayer(&coup);
+    resetPlayer();
     currGame->nextTurn();
 }
 
-void Player::transfer(Player a, Player b) {
+void Player::transfer(Player &payer, Player &receiver) {
     throw std::runtime_error("This Player can't transfer");
 }
 
@@ -77,11 +87,11 @@ void Player::tax() {
     throw std::runtime_error("This Player can't tax");
 }
 
-void Player::steal(Player a) {
+void Player::steal(Player &a) {
     throw std::runtime_error("This Player can't steal");
 }
 
-void Player::block(Player a) {
+void Player::block(Player &a) {
     // CHECK FOR WHOS TURN IS IT -- TODO --
     // CHECK IF THE PLAYER HAS MORE THAN 10 COINS (HE MUST COUP) -- TODO --
     // ADD IMPLEMENTATION THAT CHECKS WHICH ACTION IS BEING BLOCKED (IF ANY)  -- TODO --

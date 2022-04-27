@@ -4,12 +4,17 @@
 #include <iostream>
 namespace coup {
     class Ambassador : public Player {
+        Player* payer = nullptr;
+        Player* receiver = nullptr;
+        bool didTransfer = false;
 
         public:
             using Player::Player;
-            //Ambassador(Game, std::string);
-            void transfer(Player, Player); /*overridng*/
-            //CAN BLOCK STEAL -- TODO --
+            void transfer (Player&, Player&) override;
+            void resetPlayer () override;
+            std::string role() override;
+            void block(Player&) override;
+            
     };
 
 }

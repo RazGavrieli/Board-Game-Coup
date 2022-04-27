@@ -4,11 +4,10 @@
 #include <iostream>
 namespace coup {
     class Contessa : public Player {
-
         public:
             using Player::Player;
-            //Contessa(Game, std::string);
-            //CAN BLOCK ASSASINATION
+            void block(Player&) override;
+            std::string role() override;
     };
 
 }

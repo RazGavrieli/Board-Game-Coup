@@ -15,12 +15,14 @@ namespace coup {
         public:
             Game();
             //~Game();
+            void revivePlayer(Player*);
             void addPlayer(Player*);
-            void removePlayer(Player);
+            void removePlayer(Player*);
             std::vector<std::string> players(); 
             std::string turn(); 
             Player* turnPlayer();
             void nextTurn();
+            bool checkForWin();
             std::string winner();
     };
 
