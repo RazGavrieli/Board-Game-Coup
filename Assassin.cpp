@@ -12,6 +12,7 @@ void Assassin::coup(Player &coup) {
     getCurrGame()->removePlayer(&coup);
     didCoup = true;
     coupedPlayer = &coup;
+    incrementCoins(-3);
     getCurrGame()->nextTurn();
 }
 std::string Assassin::role() {     return "Assassin";}

@@ -3,7 +3,8 @@
 using namespace coup;
 
 Game::Game() {
-    gameRunning = false;
+    gameStarted = false;
+    gameFinished = false;
     playerTurn = nullptr;
 }
 
@@ -14,8 +15,6 @@ Game::Game() {
 // }
 
 void Game::revivePlayer(Player *revivedPlayer) {
-    //ADD REVIVE PLAYER IMPLEMENTATION -- TODO --
-    //THIS FUNCTION IS CALLED WHEN CONTESSA SAVES A PLAYER
     for (size_t i = 0; i < onlinePlayers.size(); i++)
     {
         if (onlinePlayers.at(i)==nullptr) {
@@ -26,8 +25,8 @@ void Game::revivePlayer(Player *revivedPlayer) {
 }
 
 void Game::addPlayer(Player *newPlayer) {
-    if(gameRunning) {
-        throw std::runtime_error("can't add new players, game already running!");
+    if(gameStarted||gameFinished) {
+        throw std::runtime_error("can't add new players, game already initiated!");
     }
     if (onlinePlayers.empty()) {
         playerTurn = newPlayer;
@@ -45,6 +44,7 @@ bool Game::checkForWin() {
     }
     
     if (numOfplayers == 1) {
+        gameFinished = true;
         return true;
     } else {
         return false;
@@ -60,15 +60,15 @@ void Game::removePlayer(Player *losingPlayer) {
             break;
         }
     }
-
+    std::cout << "removed a player, ";
     if (checkForWin()) {
-        // THERE IS A WINNER STOP THE GAME
-        gameRunning = false;
-    }
+        std::cout << "it was the 2nd last player!\n";
+        gameFinished = true;
+    } else std::cout << "\n";
 }
 
 std::vector<std::string> Game::players() {
-    gameRunning = true; // ADD BETTER IMPLEMENTATION OF GAME INITIATION -- TODO --
+    gameStarted = true; // ADD BETTER IMPLEMENTATION OF GAME INITIATION -- TODO --
     std::vector<std::string> playerNicknames; 
     for (size_t i = 0; i < onlinePlayers.size(); i++)
     {
@@ -90,22 +90,38 @@ Player* Game::turnPlayer() {
 void Game::nextTurn() {
     if (checkForWin()) {
         //THERE IS A WINNER DO SOMETHING
-        gameRunning = false;
+        gameFinished = true;
     }
     size_t i = 0;
     while (onlinePlayers.at(i)!=playerTurn) i++;
     playerTurn = onlinePlayers.at(++i%onlinePlayers.size());
-    if (playerTurn==nullptr) {
+    if (playerTurn==nullptr&&!gameFinished) {
         std::cout << "HERE";
         nextTurn();
         return;
+    } else if (gameFinished) {
+        for (size_t i = 0; i < onlinePlayers.size(); i++)
+        {
+            if (onlinePlayers.at(i)!=nullptr) {
+                playerTurn = onlinePlayers.at(i);
+                break;
+            }
+        }
+        
     }
     std::cout << "\t\tGAME MESSAGE: " << playerTurn->getNickname() << "'s(" << playerTurn->role() << ") turn\n";
 }
 
 std::string Game::winner() {
-    if (gameRunning) {
-        throw std::runtime_error("game is still running");
+    if (!gameFinished) {
+        throw std::runtime_error("game did not finish");
     }
-    return onlinePlayers.at(0)->getNickname();
+    for (size_t i = 0; i < onlinePlayers.size(); i++)
+    {
+        if (onlinePlayers.at(i)!=nullptr) {
+            return onlinePlayers.at(i)->getNickname();
+        }
+    }
+    
+    return "fatal error";
 }

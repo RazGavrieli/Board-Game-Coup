@@ -10,7 +10,8 @@ namespace coup {
     class Game {
         std::vector<Player*> onlinePlayers;
         Player *playerTurn; 
-        bool gameRunning;
+        bool gameStarted;
+        bool gameFinished;
         
         public:
             Game();

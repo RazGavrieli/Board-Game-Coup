@@ -5,9 +5,9 @@
 using namespace coup;
 
 #define INIT_COINS 0
-// Player::Player() { 
-//     // for default constructor of a game
-// }
+Player::Player() { 
+    // for default constructor of a game
+}
 Player::Player(Game & game, std::string name) {
     this->nickname = name;
     this->amountOfCoins = INIT_COINS;
@@ -76,6 +76,7 @@ void Player::coup(Player &coup) {
     }
     currGame->removePlayer(&coup);
     resetPlayer();
+    incrementCoins(-7);
     currGame->nextTurn();
 }
 
@@ -92,10 +93,4 @@ void Player::steal(Player &a) {
 }
 
 void Player::block(Player &a) {
-    // CHECK FOR WHOS TURN IS IT -- TODO --
-    // CHECK IF THE PLAYER HAS MORE THAN 10 COINS (HE MUST COUP) -- TODO --
-    // ADD IMPLEMENTATION THAT CHECKS WHICH ACTION IS BEING BLOCKED (IF ANY)  -- TODO --
-    // AND ACT ACCORDINGLY -- TODO --
-
-    throw std::runtime_error("This Player can't block "); // this exception is temporary -- TODO --
-}
+    throw std::runtime_error("This Player can't block "); 
