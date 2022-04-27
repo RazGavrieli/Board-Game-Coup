@@ -94,3 +94,4 @@ void Player::steal(Player &a) {
 
 void Player::block(Player &a) {
     throw std::runtime_error("This Player can't block "); 
+}
