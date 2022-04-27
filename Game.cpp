@@ -21,7 +21,7 @@ void Game::revivePlayer(Player *revivedPlayer) {
             onlinePlayers[i] = revivedPlayer;
         }
     }
-    
+    revivedPlayer->alive = true;
 }
 
 void Game::addPlayer(Player *newPlayer) {
@@ -60,6 +60,7 @@ void Game::removePlayer(Player *losingPlayer) {
             break;
         }
     }
+    losingPlayer->alive = false;
     std::cout << "removed a player, ";
     if (checkForWin()) {
         std::cout << "it was the 2nd last player!\n";

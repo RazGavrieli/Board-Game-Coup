@@ -16,6 +16,9 @@ void Duke::tax() {
 std::string Duke::role() {     return "Duke";}
 
 void Duke::block(Player &blockedPlayer) {
+    if (!isInGame(blockedPlayer)) {
+        throw std::runtime_error("Player not in game!");
+    }
     if (!blockedPlayer.didForeign_aid) {
         throw std::runtime_error("this player didn't foreign aid!");
     }

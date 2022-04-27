@@ -5,6 +5,9 @@ using namespace coup;
 std::string Contessa::role() {     return "Contessa";}
 
 void Contessa::block(Player &blockedPlayer) {
+    if (!isInGame(blockedPlayer)) {
+        throw std::runtime_error("Player not in game!");
+    }
     if (blockedPlayer.role()!="Assassin") {
         throw std::runtime_error("This Player can't block that!");
     }

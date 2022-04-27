@@ -10,6 +10,9 @@ void Ambassador::transfer(Player &payer, Player &receiver) {
     if (coins()>=10) {
         throw std::runtime_error("Player must coup!");
     }
+    if (!isInGame(payer)||!isInGame(receiver)) {
+        throw std::runtime_error("Player not in game!");
+    }
     if (payer.coins()<1) {
         throw std::runtime_error("Payer Player does not have enough coins!");
     }
@@ -30,6 +33,9 @@ void Ambassador::resetPlayer() {
 }
 
 void Ambassador::block(Player &blockedPlayer) {
+    if (!isInGame(blockedPlayer)) {
+        throw std::runtime_error("Player not in game!");
+    }
     if (blockedPlayer.role()!="Captain") {
         throw std::runtime_error("This Player can't block that!");
     }

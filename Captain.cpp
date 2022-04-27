@@ -5,6 +5,9 @@ void Captain::steal(Player &stealFrom) {
     if (!isPlaying()) {
         throw std::runtime_error("this isn't the player's turn!");
     }
+    if (!isInGame(stealFrom)) {
+        throw std::runtime_error("Player not in game!");
+    }
     if (coins()>=10) {
         throw std::runtime_error("Player must coup!");
     }

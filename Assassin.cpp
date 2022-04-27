@@ -9,6 +9,9 @@ void Assassin::coup(Player &coup) {
     if (this->coins()<3) {
         throw std::runtime_error("Not enough coins");
     }
+    if (!isInGame(coup)) {
+        throw std::runtime_error("Player not in game!");
+    }
     getCurrGame()->removePlayer(&coup);
     didCoup = true;
     coupedPlayer = &coup;

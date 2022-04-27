@@ -23,6 +23,7 @@ namespace coup
             void incrementCoins(int);
             bool isPlaying();
             virtual void resetPlayer(); // to be called after every move except special blockable moves
+            bool isInGame(Player &);
 
             virtual std::string role();
             int coins();

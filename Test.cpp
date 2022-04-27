@@ -36,13 +36,13 @@ TEST_CASE("GAME SCENARIO 1") {
     //PlayerTWO.income();
     for (size_t i = 1; i < Players.size(); i++)
     {
-        Players.at(i)->income();
+        CHECK_NOTHROW(Players.at(i)->income());
     }
     for (size_t j = 0; j < 2; j++)
     {
         for (size_t i = 0; i < Players.size(); i++)
         {
-            Players.at(i)->income();
+            CHECK_NOTHROW(Players.at(i)->income());
         }
     }
 
@@ -112,7 +112,7 @@ TEST_CASE("GAME SCENARIO 2") {
     {
         for (size_t i = 0; i < Players.size(); i++)
         {
-            Players.at(i)->income();
+            CHECK_NOTHROW(Players.at(i)->income());
         }
     }
     CHECK_EQ(PlayerTHREE.coins(), 7);
@@ -125,4 +125,32 @@ TEST_CASE("GAME SCENARIO 2") {
     CHECK_EQ(scenario2.players().size(), 2);
     CHECK_NOTHROW(PlayerONE.coup(PlayerTWO));
     CHECK_EQ(scenario2.winner(), "Player ONE");
+}
+
+TEST_CASE("GAME SCENARIO 3") {
+    Game scenario3{};
+
+    Ambassador PlayerONE{scenario3, "Player ONE"};
+	Contessa PlayerTWO{scenario3, "Player TWO"};
+    Duke PlayerTHREE{scenario3, "Player THREE"};
+    vector<Player*> Players = {&PlayerONE, &PlayerTWO, &PlayerTHREE};
+
+    for (size_t j = 0; j < 8; j++)
+    {
+        for (size_t i = 0; i < Players.size(); i++)
+        {
+            CHECK_NOTHROW(Players.at(i)->income());
+        }
+        CHECK_EQ(PlayerONE.coins(), j+1);
+        CHECK_EQ(PlayerTWO.coins(), j+1);
+        CHECK_EQ(PlayerTHREE.coins(), j+1);
+    }
+
+    CHECK_NOTHROW(PlayerONE.transfer(PlayerTWO, PlayerTHREE));
+    CHECK_EQ(PlayerTWO.coins(), 7);
+    CHECK_EQ(PlayerTHREE.coins(), 9);
+    CHECK_NOTHROW(PlayerTWO.coup(PlayerTHREE));
+    CHECK_THROWS(PlayerONE.coup(PlayerTHREE)); // player three already dead
+    CHECK_NOTHROW(PlayerONE.coup(PlayerTWO));
+    CHECK_EQ(scenario3.winner(), "Player ONE");
 }

@@ -11,6 +11,7 @@ Player::Player() {
 Player::Player(Game & game, std::string name) {
     this->nickname = name;
     this->amountOfCoins = INIT_COINS;
+    this->alive = true;
     game.addPlayer(this);
     currGame = &game;
 }
@@ -60,19 +61,29 @@ void Player::foreign_aid() {
         throw std::runtime_error("Player must coup!");
     }
 
-    // ADD IMPLEMENTATION OF BLOCKING FOREGIN AID -- TODO --
     incrementCoins(2);
     resetPlayer();
     didForeign_aid = true;
     currGame->nextTurn();
 }
-
+bool Player::isInGame(Player &coup) {
+    std::cout << "the coup.alive is " << coup.alive;
+    if (coup.currGame!=currGame||!coup.alive) {
+        return false; 
+    } else {
+        std::cout << " returned true\n!";
+        return true;
+    }
+}
 void Player::coup(Player &coup) {
     if (!isPlaying()) {
         throw std::runtime_error("this isn't the player's turn!");
     }
     if (this->amountOfCoins<7) {
         throw std::runtime_error("Not enough coins");
+    }
+    if (!isInGame(coup)) {
+        throw std::runtime_error("Player not in game!");
     }
     currGame->removePlayer(&coup);
     resetPlayer();
