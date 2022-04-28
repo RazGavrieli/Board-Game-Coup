@@ -98,33 +98,35 @@ TEST_CASE("GAME SCENARIO 2") {
     CHECK_EQ(PlayerTHREE.role(), "Captain");
 
     CHECK_EQ(scenario2.players().size(), 3);
-    CHECK_NOTHROW(PlayerONE.tax());
-    CHECK_THROWS(PlayerTWO.tax());
-    CHECK_THROWS(PlayerTHREE.income());
-    CHECK_NOTHROW(PlayerTWO.income());
-    CHECK_THROWS(PlayerTHREE.steal(PlayerTWO)); // not enough coins
-    CHECK_EQ(PlayerONE.coins(), 3);
-    CHECK_NOTHROW(PlayerTHREE.steal(PlayerONE));
-    CHECK_EQ(PlayerTHREE.coins(), 2);
+    CHECK_NOTHROW(PlayerONE.tax()); // 3 (COINS)
+    CHECK_THROWS(PlayerTWO.tax()); 
+    CHECK_THROWS(PlayerTHREE.income()); 
+    CHECK_NOTHROW(PlayerTWO.income());// 1 (COINS)
     CHECK_EQ(PlayerTWO.coins(), 1);
-    CHECK_EQ(PlayerONE.coins(), 1);
+    CHECK_NOTHROW(PlayerTHREE.steal(PlayerTWO));  // THREE 1, TWO 0 (COINS)
+    CHECK_EQ(PlayerONE.coins(), 3);
+    CHECK_EQ(PlayerTHREE.coins(), 1);
+    CHECK_EQ(PlayerTWO.coins(), 0);
     for (size_t j = 0; j < 5; j++)
     {
         for (size_t i = 0; i < Players.size(); i++)
         {
-            CHECK_NOTHROW(Players.at(i)->income());
+            CHECK_NOTHROW(Players.at(i)->income()); // ADD 5 TO EACH PLAYER (COINS)
         }
     }
-    CHECK_EQ(PlayerTHREE.coins(), 7);
-    CHECK_EQ(PlayerTWO.coins(), 6);
-    CHECK_EQ(PlayerONE.coins(), 6);
-    CHECK_THROWS(PlayerONE.coup(PlayerTHREE));
+    CHECK_EQ(PlayerTHREE.coins(), 6);
+    CHECK_EQ(PlayerTWO.coins(), 5);
+    CHECK_EQ(PlayerONE.coins(), 8);
+    CHECK_NOTHROW(PlayerONE.coup(PlayerTHREE));
     CHECK_THROWS(scenario2.winner());
-    PlayerONE.tax();
-    CHECK_NOTHROW(PlayerTWO.coup(PlayerTHREE));
+    CHECK_EQ(PlayerONE.coins(), 1);
     CHECK_EQ(scenario2.players().size(), 2);
-    CHECK_NOTHROW(PlayerONE.coup(PlayerTWO));
-    CHECK_EQ(scenario2.winner(), "Player ONE");
+    CHECK_THROWS(PlayerTWO.coup(PlayerTHREE)); // PLAYER THREE ALREADY DEAD
+    CHECK_EQ(scenario2.players().size(), 2);
+    CHECK_NOTHROW(PlayerTWO.coup(PlayerONE));
+    CHECK_EQ(scenario2.players().size(), 1);
+    CHECK_THROWS(PlayerONE.coup(PlayerTWO)); // PLAYER ONE ALREADY DEAD
+    CHECK_EQ(scenario2.winner(), "Player TWO");
 }
 
 TEST_CASE("GAME SCENARIO 3") {

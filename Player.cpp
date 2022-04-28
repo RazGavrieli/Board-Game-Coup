@@ -4,14 +4,18 @@
 #include <iostream>
 using namespace coup;
 
-#define INIT_COINS 0
-Player::Player() { 
-    // for default constructor of a game
-}
+const short INIT_COINS = 0;
+const short MAX_COINS = 10;
+const short COUP_PRICE = 7;
+
+// Player::Player() { 
+//     // for default constructor of a game
+// }
 Player::Player(Game & game, std::string name) {
-    this->nickname = name;
-    this->amountOfCoins = INIT_COINS;
-    this->alive = true;
+    nickname = std::move(name);
+    amountOfCoins = INIT_COINS;
+    alive = true;
+    didForeign_aid = false;
     game.addPlayer(this);
     currGame = &game;
 }
@@ -20,31 +24,29 @@ void Player::incrementCoins(int increment) {
     this->amountOfCoins+=increment;
 }
 
-Game* Player::getCurrGame() { return currGame;}
+Game* Player::getCurrGame() const  { return currGame;}
 
-std::string Player::getNickname() {  return this->nickname;}
+std::string Player::getNickname() const  {  return nickname;}
 
-bool Player::isPlaying() {
-    if (currGame->turnPlayer()!=this) {
-        std::cout << currGame->turn() << "!=" << nickname << std::endl;
-        return false;
-    }
-    return true;
+bool Player::isAlive() const {  return alive;}
+bool Player::didForeign() const {  return didForeign_aid;}
+bool Player::isPlaying() const{    return currGame->turnPlayer()==this;}
+bool Player::isMaxCoins() const{    return coins()>=MAX_COINS;}
+std::string Player::role() const  {     return "This player still has no role";}
+int Player::coins()const {  return this->amountOfCoins;}
+
+void Player::setAlive(bool isAlive) {
+    alive = isAlive;
 }
-
 void Player::resetPlayer() {
     didForeign_aid = false;
 }
-
-std::string Player::role() {     return "This player still has no role";}
-
-int Player::coins() {  return this->amountOfCoins;}
 
 void Player::income() {
     if (!isPlaying()) {
         throw std::runtime_error("this isn't the player's turn!");
     }
-    if (coins()>=10) {
+    if (isMaxCoins()) {
         throw std::runtime_error("Player must coup!");
     }
     
@@ -57,7 +59,7 @@ void Player::foreign_aid() {
     if (!isPlaying()) {
         throw std::runtime_error("this isn't the player's turn!");
     }
-    if (coins()>=10) {
+    if (isMaxCoins()) {
         throw std::runtime_error("Player must coup!");
     }
 
@@ -67,19 +69,14 @@ void Player::foreign_aid() {
     currGame->nextTurn();
 }
 bool Player::isInGame(Player &coup) {
-    std::cout << "the coup.alive is " << coup.alive;
-    if (coup.currGame!=currGame||!coup.alive) {
-        return false; 
-    } else {
-        std::cout << " returned true\n!";
-        return true;
-    }
+    return !(coup.currGame!=currGame||!coup.alive);
 }
+
 void Player::coup(Player &coup) {
     if (!isPlaying()) {
         throw std::runtime_error("this isn't the player's turn!");
     }
-    if (this->amountOfCoins<7) {
+    if (this->amountOfCoins<COUP_PRICE) {
         throw std::runtime_error("Not enough coins");
     }
     if (!isInGame(coup)) {
@@ -87,7 +84,7 @@ void Player::coup(Player &coup) {
     }
     currGame->removePlayer(&coup);
     resetPlayer();
-    incrementCoins(-7);
+    incrementCoins(-COUP_PRICE);
     currGame->nextTurn();
 }
 

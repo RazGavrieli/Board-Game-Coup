@@ -18,7 +18,11 @@ void Assassin::coup(Player &coup) {
     incrementCoins(-3);
     getCurrGame()->nextTurn();
 }
-std::string Assassin::role() {     return "Assassin";}
+std::string Assassin::role() const {     return "Assassin";}
+
+bool Assassin::isCouped() const{      return didCoup;}
+
+Player* Assassin::getCoupedPlayer() const{    return coupedPlayer;}
 
 void Assassin::resetPlayer () {
     didCoup = false;

@@ -3,16 +3,28 @@
 
 #include <iostream>
 
-namespace coup {
-    class Assassin : public Player {
-
-        public:
+namespace coup
+{
+    class Assassin : public Player
+    {
+        /* private fields */
         bool didCoup = false;
-        Player* coupedPlayer;
-            using Player::Player;
-            void coup(Player&) override; 
-            void resetPlayer () override;
-            std::string role() override;
+        Player *coupedPlayer;
+
+    public:
+        /* --- constructors --- */
+        using Player::Player;
+
+        /* --- getters --- */
+        std::string role() const override;
+        bool isCouped() const;
+        Player *getCoupedPlayer() const;
+
+        /* --- setters --- */
+        void resetPlayer() override;
+
+        /* --- functions --- */
+        void coup(Player &) override;
     };
 
 }

@@ -8,12 +8,6 @@ Game::Game() {
     playerTurn = nullptr;
 }
 
-// Game::~Game() {
-//     std::cout << "here\n";
-//     //onlinePlayers->resize(0);
-//     //delete onlinePlayers;
-// }
-
 void Game::revivePlayer(Player *revivedPlayer) {
     for (size_t i = 0; i < onlinePlayers.size(); i++)
     {
@@ -21,7 +15,8 @@ void Game::revivePlayer(Player *revivedPlayer) {
             onlinePlayers[i] = revivedPlayer;
         }
     }
-    revivedPlayer->alive = true;
+    std::cout << "\t\tGAME MESSAGE: Reviving " << revivedPlayer->getNickname() << "\n";
+    revivedPlayer->setAlive(true);
 }
 
 void Game::addPlayer(Player *newPlayer) {
@@ -46,30 +41,27 @@ bool Game::checkForWin() {
     if (numOfplayers == 1) {
         gameFinished = true;
         return true;
-    } else {
-        return false;
-    }
+    } 
+    return false;
+    
 }
 
 void Game::removePlayer(Player *losingPlayer) {
     for (size_t i = 0; i < onlinePlayers.size(); i++)
     {
         if (onlinePlayers.at(i)==losingPlayer) {
-            std::cout << "Removing " << losingPlayer->getNickname() << " from the game!\n";
+            std::cout << "\t\t GAME MESSAGE: Removing " << losingPlayer->getNickname() << " from the game!\n";
             onlinePlayers[i] = nullptr;
             break;
         }
     }
-    losingPlayer->alive = false;
-    std::cout << "removed a player, ";
+    losingPlayer->setAlive(false);
     if (checkForWin()) {
-        std::cout << "it was the 2nd last player!\n";
         gameFinished = true;
-    } else std::cout << "\n";
+    }
 }
 
-std::vector<std::string> Game::players() {
-    gameStarted = true; // ADD BETTER IMPLEMENTATION OF GAME INITIATION -- TODO --
+std::vector<std::string> Game::players() const{
     std::vector<std::string> playerNicknames; 
     for (size_t i = 0; i < onlinePlayers.size(); i++)
     {
@@ -80,27 +72,27 @@ std::vector<std::string> Game::players() {
     return playerNicknames;
 }
 
-std::string Game::turn() {
+std::string Game::turn() const{
     return playerTurn->getNickname();;
 }
 
-Player* Game::turnPlayer() {
+Player* Game::turnPlayer() const{
     return playerTurn;
 }
 
 void Game::nextTurn() {
+    gameStarted = true; 
     if (checkForWin()) {
-        //THERE IS A WINNER DO SOMETHING
         gameFinished = true;
     }
     size_t i = 0;
-    while (onlinePlayers.at(i)!=playerTurn) i++;
+    while (onlinePlayers.at(i)!=playerTurn) {i++;}
     playerTurn = onlinePlayers.at(++i%onlinePlayers.size());
     if (playerTurn==nullptr&&!gameFinished) {
-        std::cout << "HERE";
         nextTurn();
         return;
-    } else if (gameFinished) {
+    } 
+    if (gameFinished) {
         for (size_t i = 0; i < onlinePlayers.size(); i++)
         {
             if (onlinePlayers.at(i)!=nullptr) {
@@ -108,9 +100,10 @@ void Game::nextTurn() {
                 break;
             }
         }
-        
     }
-    std::cout << "\t\tGAME MESSAGE: " << playerTurn->getNickname() << "'s(" << playerTurn->role() << ") turn\n";
+    if (playerTurn!=nullptr) {
+        std::cout << "\t\tGAME MESSAGE: " << playerTurn->getNickname() << "'s(" << playerTurn->role() << ") turn\n";
+    }
 }
 
 std::string Game::winner() {

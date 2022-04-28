@@ -1,33 +1,38 @@
 #ifndef Game_H
 #define Game_H
 
-#include <iostream>
 #include <vector>
 
 #include "Player.hpp"
 
-namespace coup {
-    class Game {
-        std::vector<Player*> onlinePlayers;
-        Player *playerTurn; 
+namespace coup
+{
+    class Game
+    {   
+        /* --- private fields --- */
+        std::vector<Player *> onlinePlayers;
+        Player *playerTurn;
         bool gameStarted;
         bool gameFinished;
-        
-        public:
-            Game();
-            //~Game();
-            void revivePlayer(Player*);
-            void addPlayer(Player*);
-            void removePlayer(Player*);
 
-            std::vector<std::string> players(); 
-            std::string turn(); 
-            Player* turnPlayer();
-            void nextTurn();
-            bool checkForWin();
-            std::string winner();
+    public:
+            /* --- constructors --- */
+        Game();
 
-            
+            /* --- getters --- */
+        std::vector<std::string> players() const;
+        std::string turn() const;
+        Player *turnPlayer() const;
+
+            /* --- setters --- */
+
+            /* --- functions --- */
+        void revivePlayer(Player *);
+        void addPlayer(Player *);
+        void removePlayer(Player *);
+        bool checkForWin();
+        std::string winner();
+        void nextTurn();
     };
 
 }

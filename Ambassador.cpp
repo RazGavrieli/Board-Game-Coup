@@ -2,12 +2,11 @@
 #include "Captain.hpp"
 
 using namespace coup;
-class Captain;
 void Ambassador::transfer(Player &payer, Player &receiver) {
     if (!isPlaying()) {
         throw std::runtime_error("this isn't the player's turn!");
     }
-    if (coins()>=10) {
+    if (isMaxCoins()) {
         throw std::runtime_error("Player must coup!");
     }
     if (!isInGame(payer)||!isInGame(receiver)) {
@@ -25,7 +24,7 @@ void Ambassador::transfer(Player &payer, Player &receiver) {
     getCurrGame()->nextTurn();
 }
 
-std::string Ambassador::role() {     return "Ambassador";}
+std::string Ambassador::role() const {     return "Ambassador";}
 
 void Ambassador::resetPlayer() {
     didTransfer = false;
@@ -40,11 +39,24 @@ void Ambassador::block(Player &blockedPlayer) {
         throw std::runtime_error("This Player can't block that!");
     }
     Captain *blockedCaptain = dynamic_cast<Captain*>(&blockedPlayer);
-    if (!blockedCaptain->didSteal) {
+    if (blockedCaptain->isSteal()==0) {
         throw std::runtime_error("The blocked Player didn't steal!");
+    } 
+    if (blockedCaptain->isSteal()==1) {
+        //throw std::runtime_error("The blocked Player didn't steal!");
+        blockedCaptain->incrementCoins(-1);
+        if (isInGame(*blockedCaptain->getStolenPlayer())) {
+            blockedCaptain->getStolenPlayer()->incrementCoins(1); 
+        }
+        blockedCaptain->resetPlayer();
+        return;
     }
     blockedCaptain->incrementCoins(-2);
-    blockedCaptain->stolenPlayer->incrementCoins(2); // CHECK IF THE STOLEN PLAYER IS STILL IN THE GAME!!!!! -- TODO --
+    if (isInGame(*blockedCaptain->getStolenPlayer())) {
+        blockedCaptain->getStolenPlayer()->incrementCoins(2); 
+    }
     blockedCaptain->resetPlayer();
+    
+
     
 }

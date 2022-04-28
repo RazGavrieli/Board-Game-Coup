@@ -5,9 +5,16 @@
 namespace coup {
     class Contessa : public Player {
         public:
+                /* --- constructors --- */
             using Player::Player;
+
+                /* --- getters --- */
+            std::string role() const override;
+                /* --- setters --- */
+                
+                /* --- functions --- */
             void block(Player&) override;
-            std::string role() override;
+
     };
 
 }

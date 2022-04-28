@@ -2,19 +2,28 @@
 #include "Game.hpp"
 
 #include <iostream>
-namespace coup {
-    class Ambassador : public Player {
-        Player* payer = nullptr;
-        Player* receiver = nullptr;
+namespace coup
+{
+    class Ambassador : public Player
+    {
+        /* private fields */
+        Player *payer = nullptr;
+        Player *receiver = nullptr;
         bool didTransfer = false;
 
-        public:
-            using Player::Player;
-            void transfer (Player&, Player&) override;
-            void resetPlayer () override;
-            std::string role() override;
-            void block(Player&) override;
-            
+    public:
+        /* --- constructors --- */
+        using Player::Player;
+
+        /* --- getters --- */
+        std::string role() const override;
+
+        /* --- setters --- */
+        void resetPlayer() override;
+
+        /* --- functions --- */
+        void transfer(Player &, Player &) override;
+        void block(Player &) override;
     };
 
 }

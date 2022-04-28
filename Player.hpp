@@ -7,32 +7,39 @@ namespace coup
 {
     class Game;
     class Player {
+                /*private fields*/
         int amountOfCoins;
         std::string nickname;
         Game *currGame;
-        
+        bool didForeign_aid = false;
+        bool alive = true;    
         
         public:   
-        bool didForeign_aid = false;
-        bool alive = true;
-            Player();
+                /* --- constructors --- */
             Player(Game &, std::string);
 
-            Game* getCurrGame();
-            std::string getNickname();
-            void incrementCoins(int);
-            bool isPlaying();
-            virtual void resetPlayer(); // to be called after every move except special blockable moves
+                /* --- getters --- */
+            Game* getCurrGame() const;
+            std::string getNickname() const;
+            bool isPlaying() const;
+            bool didForeign() const;
             bool isInGame(Player &);
+            bool isMaxCoins() const;
+            bool isAlive() const;
+            virtual std::string role() const;
+            int coins() const;
 
-            virtual std::string role();
-            int coins();
+                /* --- setters --- */
+            void setAlive(bool);
+            void incrementCoins(int);
+            virtual void resetPlayer();
+            
+            
+                /* --- functions --- */
             void income();
             void foreign_aid();
             virtual void coup(Player&);
-            // std::string role(); // STILL NEEDS IMPLEMENTATION -- TODO --
 
-            /*specific role actions (these function are overridden by the relevant role)*/ 
             virtual void transfer(Player&, Player&);
             virtual void tax();
             virtual void steal(Player&);
@@ -41,5 +48,5 @@ namespace coup
 
 
     };
-} // namespace coup
+} 
 #endif

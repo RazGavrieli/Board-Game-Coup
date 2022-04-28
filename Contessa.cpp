@@ -2,7 +2,7 @@
 #include "Assassin.hpp"
 using namespace coup;
 
-std::string Contessa::role() {     return "Contessa";}
+std::string Contessa::role() const {     return "Contessa";}
 
 void Contessa::block(Player &blockedPlayer) {
     if (!isInGame(blockedPlayer)) {
@@ -12,11 +12,10 @@ void Contessa::block(Player &blockedPlayer) {
         throw std::runtime_error("This Player can't block that!");
     }
     Assassin *blockedAssassin = dynamic_cast<Assassin*>(&blockedPlayer); 
-    if (!blockedAssassin->didCoup) {
+    if (!blockedAssassin->isCouped()) {
         throw std::runtime_error("The blocked Player didn't steal!");
     }
 
-    getCurrGame()->revivePlayer(blockedAssassin->coupedPlayer); // TO IMPLEMENT
-    blockedAssassin->didCoup = false;
-    blockedAssassin->coupedPlayer = nullptr;
+    getCurrGame()->revivePlayer(blockedAssassin->getCoupedPlayer()); 
+    blockedAssassin->resetPlayer();
 }

@@ -3,17 +3,30 @@
 
 #include <iostream>
 
-namespace coup {
-    class Captain : public Player{
+namespace coup
+{
+    class Captain : public Player
+    {
+        /* private fields */
+        int didSteal = 0;
+        Player *stolenPlayer = nullptr;
 
-        public:
-        bool didSteal = false;
-        Player* stolenPlayer = nullptr;
-            using Player::Player;
-            void steal(Player&) override; 
-            void block(Player&) override;
-            void resetPlayer () override;
-            std::string role() override;
+    public:
+        /* --- constructors --- */
+        using Player::Player;
+
+        /* --- getters --- */
+        std::string role() const override;
+        int isSteal() const;
+        Player* getStolenPlayer() const;
+
+        /* --- setters --- */
+        void resetPlayer() override;
+
+        /* --- functions --- */
+        void steal(Player &) override;
+        void block(Player &) override;
     };
 
 }
+
