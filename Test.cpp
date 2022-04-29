@@ -156,3 +156,48 @@ TEST_CASE("GAME SCENARIO 3") {
     CHECK_NOTHROW(PlayerONE.coup(PlayerTWO));
     CHECK_EQ(scenario3.winner(), "Player ONE");
 }
+
+TEST_CASE("Assassination with more than 7 coins") {
+    Game scenario4{};
+    Assassin assassin{scenario4, "Player ONE"};
+    Contessa contessa{scenario4, "Player THREE"};
+    Duke duke{scenario4, "Player THREE"};
+
+    std::vector<Player*> Players = {&assassin, &contessa, &duke};
+    for (size_t j = 0; j < 5; j++)
+    {
+        for (size_t i = 0; i < Players.size(); i++)
+        {
+           CHECK_NOTHROW( Players.at(i)->income());
+        }
+    }
+    CHECK_NOTHROW(assassin.coup(duke));
+    CHECK_EQ(assassin.coins(), 2);
+    CHECK_EQ(scenario4.players().size(), 2);
+    CHECK_NOTHROW(contessa.block(assassin));
+    CHECK_EQ(scenario4.players().size(), 3);
+    CHECK_EQ(assassin.coins(), 2);
+    CHECK_NOTHROW(contessa.income()); 
+    CHECK_NOTHROW(duke.income());
+    for (size_t j = 0; j < 3; j++)
+    {
+        for (size_t i = 0; i < Players.size(); i++)
+        {
+            if (i==0) {
+                CHECK_NOTHROW(Players.at(i)->foreign_aid());
+            } else {
+                CHECK_NOTHROW(Players.at(i)->income());
+            }
+        }
+    }
+    CHECK_EQ(assassin.coins(), 8);
+    CHECK_EQ(scenario4.players().size(), 3);
+    CHECK_NOTHROW(assassin.coup(duke));
+    CHECK_EQ(assassin.coins(), 1);
+    CHECK_EQ(scenario4.players().size(), 2);
+    CHECK_THROWS(contessa.block(assassin));
+    CHECK_EQ(scenario4.players().size(), 2);
+    CHECK_EQ(assassin.coins(), 1);
+
+    
+}
