@@ -158,9 +158,14 @@ TEST_CASE("GAME SCENARIO 3") {
 }
 
 TEST_CASE("Assassination with more than 7 coins") {
+    /*
+        This specific test checks if a coup made by an assassin is blockable by contessa.
+        Later in the game the assassin will have more than 7 coins, 
+        and if he coups it will cost him 7 coins and will be unblockable by the contessa.
+    */
     Game scenario4{};
     Assassin assassin{scenario4, "Player ONE"};
-    Contessa contessa{scenario4, "Player THREE"};
+    Contessa contessa{scenario4, "Player TWO"};
     Duke duke{scenario4, "Player THREE"};
 
     std::vector<Player*> Players = {&assassin, &contessa, &duke};
@@ -198,6 +203,39 @@ TEST_CASE("Assassination with more than 7 coins") {
     CHECK_THROWS(contessa.block(assassin));
     CHECK_EQ(scenario4.players().size(), 2);
     CHECK_EQ(assassin.coins(), 1);
+}
 
-    
+TEST_CASE("Ambassador transfer test") {
+    /*
+        This specific test checks the correctness of transfer 
+    */
+    Game scenario5{};
+    Assassin assassin{scenario5, "Player ONE"};
+    Ambassador ambassador{scenario5, "Player TWO"};
+    Duke duke{scenario5, "Player THREE"};
+    std::vector<Player*> Players = {&assassin, &ambassador, &duke};
+    assassin.income();
+    CHECK_THROWS(ambassador.transfer(duke, assassin));
+    ambassador.income();
+    duke.income();
+    CHECK_EQ(assassin.coins(), 1);
+    CHECK_EQ(ambassador.coins(), 1);
+    CHECK_EQ(duke.coins(), 1);
+    for (size_t j = 0; j < 4; j++)
+    {
+        for (size_t i = 0; i < Players.size(); i++)
+        {
+           CHECK_NOTHROW( Players.at(i)->income());
+        }
+    }
+    CHECK_EQ(assassin.coins(), 5);
+    CHECK_EQ(ambassador.coins(), 5);
+    CHECK_EQ(duke.coins(), 5);
+    assassin.income();
+    CHECK_EQ(assassin.coins(), 6);
+    CHECK_NOTHROW(ambassador.transfer(assassin, duke));
+    CHECK_EQ(assassin.coins(), 5);
+    CHECK_EQ(ambassador.coins(), 5);
+    CHECK_EQ(duke.coins(), 6);
+
 }
