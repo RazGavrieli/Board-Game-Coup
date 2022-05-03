@@ -9,17 +9,28 @@ Game::Game() {
 }
 
 void Game::revivePlayer(Player *revivedPlayer) {
-    for (size_t i = 0; i < onlinePlayers.size(); i++)
-    {
-        if (onlinePlayers.at(i)==nullptr) {
-            onlinePlayers[i] = revivedPlayer;
-        }
+    /**
+     * @brief This function is called when contessa blocks a coup made by an assassin for 3 coins. 
+     * It sets the isAlive field of the player to True, and adds it back to it's slot of the turn system.
+     */
+    if (onlinePlayers.at(revivedPlayer->getid())==nullptr) {
+        std::cout << "\t\tGAME MESSAGE: Reviving " << revivedPlayer->getNickname() << "\n";
+        onlinePlayers[revivedPlayer->getid()] = revivedPlayer;
+        revivedPlayer->setAlive(true);
+        return;
+    } 
+    if (onlinePlayers.at(revivedPlayer->getid())==revivedPlayer) {
+        throw std::runtime_error("player already alive");
     }
-    std::cout << "\t\tGAME MESSAGE: Reviving " << revivedPlayer->getNickname() << "\n";
-    revivedPlayer->setAlive(true);
+    throw std::runtime_error("fatal error, slot taken");
+
 }
 
-void Game::addPlayer(Player *newPlayer) {
+size_t Game::addPlayer(Player *newPlayer) {
+    /**
+     * @brief This function is called by the constructor of a Player object.
+     * It adds the player to the game (adds it to the turn system i.e vector) and returns the ID of the player (0-5).
+     */
     if(gameStarted||gameFinished) {
         throw std::runtime_error("can't add new players, game already initiated!");
     }
@@ -27,6 +38,7 @@ void Game::addPlayer(Player *newPlayer) {
         playerTurn = newPlayer;
     }
     onlinePlayers.push_back(newPlayer);
+    return onlinePlayers.size()-1;
 }
 
 bool Game::checkForWin() {
@@ -47,6 +59,10 @@ bool Game::checkForWin() {
 }
 
 void Game::removePlayer(Player *losingPlayer) {
+    /**
+     * @brief This function is called when a player is couped. 
+     * It also checks if the game is finished. (If only one player remaining)
+     */
     for (size_t i = 0; i < onlinePlayers.size(); i++)
     {
         if (onlinePlayers.at(i)==losingPlayer) {
@@ -81,6 +97,15 @@ Player* Game::turnPlayer() const{
 }
 
 void Game::nextTurn() {
+    /**
+     * @brief This function is responsible for the turn system in the game. 
+     * It is called at the end of every move that satisfy a complete turn of a Player. 
+     * 
+     * The way it works is iterating over the vector of players until we find the current player and adding one to the iterating index.
+     * We then initialize the pointer of the current playing Player to the (Player located at the new index) % (amount of players).
+     * 
+     * If the new Player is not playing (couped, for example) we then call the function again to calculate the next player. (recursion)
+     */
     gameStarted = true; 
     if (checkForWin()) {
         gameFinished = true;
@@ -107,6 +132,10 @@ void Game::nextTurn() {
 }
 
 std::string Game::winner() {
+    /**
+     * @brief returns the winner of the game
+     * 
+     */
     if (!gameFinished) {
         throw std::runtime_error("game did not finish");
     }

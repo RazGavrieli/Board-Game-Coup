@@ -8,12 +8,13 @@ namespace coup
     class Assassin : public Player
     {
         /* private fields */
-        bool didCoup = false;
+        bool didCoup;
         Player *coupedPlayer;
 
     public:
         /* --- constructors --- */
-        using Player::Player;
+        Assassin(Game &, std::string);
+        //using Player::Player;
 
         /* --- getters --- */
         std::string role() const override;

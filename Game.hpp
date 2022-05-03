@@ -28,7 +28,7 @@ namespace coup
 
             /* --- functions --- */
         void revivePlayer(Player *);
-        void addPlayer(Player *);
+        size_t addPlayer(Player *);
         void removePlayer(Player *);
         bool checkForWin();
         std::string winner();

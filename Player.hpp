@@ -9,10 +9,11 @@ namespace coup
     class Player {
                 /*private fields*/
         int amountOfCoins;
+        size_t id; // (0-5)
         std::string nickname;
         Game *currGame;
-        bool didForeign_aid = false;
-        bool alive = true;    
+        bool didForeign_aid;
+        bool alive;    
         
         public:   
                 /* --- constructors --- */
@@ -28,7 +29,7 @@ namespace coup
             bool isAlive() const;
             virtual std::string role() const;
             int coins() const;
-
+            size_t getid() const;
                 /* --- setters --- */
             void setAlive(bool);
             void incrementCoins(int);

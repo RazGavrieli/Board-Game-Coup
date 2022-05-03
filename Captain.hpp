@@ -8,12 +8,13 @@ namespace coup
     class Captain : public Player
     {
         /* private fields */
-        int didSteal = 0;
-        Player *stolenPlayer = nullptr;
+        int didSteal;
+        Player *stolenPlayer;
 
     public:
         /* --- constructors --- */
-        using Player::Player;
+        Captain(Game &, std::string);
+        //using Player::Player;
 
         /* --- getters --- */
         std::string role() const override;

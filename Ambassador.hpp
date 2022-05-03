@@ -7,19 +7,20 @@ namespace coup
     class Ambassador : public Player
     {
         /* private fields */
-        Player *payer = nullptr;
-        Player *receiver = nullptr;
-        bool didTransfer = false;
+        // Player *payer;
+        // Player *receiver; NOT NEEDED FOR BLOCKING IMPLEMENTATION
+        // bool didTransfer;
 
     public:
         /* --- constructors --- */
         using Player::Player;
+        // Ambassador(Game &, std::string);
 
         /* --- getters --- */
         std::string role() const override;
 
         /* --- setters --- */
-        void resetPlayer() override;
+        // void resetPlayer() override;
 
         /* --- functions --- */
         void transfer(Player &, Player &) override;

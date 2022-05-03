@@ -1,6 +1,11 @@
 #include "Captain.hpp"
 using namespace coup;
 
+Captain::Captain(Game & game, std::string name) : Player(game, std::move(name)) {
+    didSteal = 0;
+    stolenPlayer = nullptr;
+}
+
 void Captain::steal(Player &stealFrom) {
     if (!isPlaying()) {
         throw std::runtime_error("this isn't the player's turn!");

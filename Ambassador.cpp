@@ -2,6 +2,13 @@
 #include "Captain.hpp"
 
 using namespace coup;
+
+// Ambassador::Ambassador(Game & game, std::string name) : Player(game, std::move(name)) {
+//         payer = nullptr;
+//         receiver = nullptr;
+//         didTransfer = false;
+// }
+
 void Ambassador::transfer(Player &payer, Player &receiver) {
     if (!isPlaying()) {
         throw std::runtime_error("this isn't the player's turn!");
@@ -18,18 +25,26 @@ void Ambassador::transfer(Player &payer, Player &receiver) {
     payer.incrementCoins(-1);
     receiver.incrementCoins(1);
     
-    this->payer = &payer;
-    this->receiver = &receiver;
-    didTransfer = true;
+        /* the following data is for blocking system to the transfer function
+        it is not needed for this assigment though it was written for future proofing the code */
+    // this->payer = &payer;
+    // this->receiver = &receiver;
+    // didTransfer = true;
+        /* ------- */
+
     getCurrGame()->nextTurn();
 }
 
 std::string Ambassador::role() const {     return "Ambassador";}
 
-void Ambassador::resetPlayer() {
-    didTransfer = false;
-    payer = receiver = nullptr;
-}
+// void Ambassador::resetPlayer() {
+    /**
+     * @brief NOT NEEDED BLOCKING IMPLEMENTATION
+     * 
+     */
+//     didTransfer = false;
+//     payer = receiver = nullptr;
+// }
 
 void Ambassador::block(Player &blockedPlayer) {
     if (!isInGame(blockedPlayer)) {

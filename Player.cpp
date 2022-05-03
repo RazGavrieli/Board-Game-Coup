@@ -16,7 +16,7 @@ Player::Player(Game & game, std::string name) {
     amountOfCoins = INIT_COINS;
     alive = true;
     didForeign_aid = false;
-    game.addPlayer(this);
+    id = game.addPlayer(this);
     currGame = &game;
 }
 
@@ -33,7 +33,8 @@ bool Player::didForeign() const {  return didForeign_aid;}
 bool Player::isPlaying() const{    return currGame->turnPlayer()==this;}
 bool Player::isMaxCoins() const{    return coins()>=MAX_COINS;}
 std::string Player::role() const  {     return "This player still has no role";}
-int Player::coins()const {  return this->amountOfCoins;}
+int Player::coins()const {  return amountOfCoins;}
+size_t Player::getid() const {  return id;}
 
 void Player::setAlive(bool isAlive) {
     alive = isAlive;
@@ -43,6 +44,10 @@ void Player::resetPlayer() {
 }
 
 void Player::income() {
+    /**
+     * @brief Initiates "income" move to the player
+     * 
+     */
     if (!isPlaying()) {
         throw std::runtime_error("this isn't the player's turn!");
     }
@@ -56,6 +61,10 @@ void Player::income() {
 }
 
 void Player::foreign_aid() {
+    /**
+     * @brief Initiates "foreign aid" move to the player (blockable by duke)
+     * 
+     */
     if (!isPlaying()) {
         throw std::runtime_error("this isn't the player's turn!");
     }
@@ -73,10 +82,14 @@ bool Player::isInGame(Player &coup) {
 }
 
 void Player::coup(Player &coup) {
+    /**
+     * @brief Initiates "coup" move to the Player that is being couped.
+     * 
+     */
     if (!isPlaying()) {
         throw std::runtime_error("this isn't the player's turn!");
     }
-    if (this->amountOfCoins<COUP_PRICE) {
+    if (amountOfCoins<COUP_PRICE) {
         throw std::runtime_error("Not enough coins");
     }
     if (!isInGame(coup)) {
