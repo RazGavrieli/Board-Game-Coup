@@ -1,3 +1,10 @@
+/**
+ * Test file to check the correctness of a Matrix class
+ *
+ * @author Raz Gavrieli -> razgavrieli@gmail.com
+ * @since 2022-04
+ */
+
 #include "Player.hpp"
 #include "Duke.hpp"
 #include "Assassin.hpp"
@@ -24,7 +31,7 @@ TEST_CASE("GAME SCENARIO 1") {
     vector<Player*> Players = {&PlayerONE, &PlayerTWO, &PlayerTHREE, &PlayerFOUR};
 
     CHECK_EQ(PlayerTWO.role(), "Assassin");
-    CHECK_EQ(PlayerONE.role(), PlayerTHREE.role()); // TWo players can have the same role
+    CHECK_EQ(PlayerONE.role(), PlayerTHREE.role()); // Two players can have the same role
 
     CHECK_EQ(scenario1.players().size(), 4);
     CHECK_NOTHROW(PlayerONE.income());
@@ -58,8 +65,8 @@ TEST_CASE("GAME SCENARIO 1") {
     CHECK_EQ(PlayerTHREE.coins(), 6);
     CHECK_THROWS(PlayerTWO.income()); // Its not Player TWO's turn
     CHECK_NOTHROW(PlayerFOUR.block(PlayerTWO)); // Contessa blocks the coup and ..
-    CHECK_EQ(scenario1.players().size(), 4); // .. Player One Returns to the game
-    CHECK_THROWS(PlayerTWO.income()); // Its not Player TWO's turn, Keep in mind that PLayer one returns to the same order
+    CHECK_EQ(scenario1.players().size(), 4); // .. Player ONE returns to the game
+    CHECK_THROWS(PlayerTWO.income()); // Its not Player TWO's turn, Keep in mind that Player one returns to the same order
     CHECK_EQ(PlayerONE.coins(), 6);
     PlayerFOUR.foreign_aid();
     CHECK_NOTHROW(PlayerONE.income());
@@ -107,7 +114,7 @@ TEST_CASE("GAME SCENARIO 2") {
     {
         for (size_t i = 0; i < Players.size(); i++)
         {
-            CHECK_NOTHROW(Players.at(i)->income()); // ADD 5 TO EACH PLAYER (COINS)
+            CHECK_NOTHROW(Players.at(i)->income()); // ADD 5 COINS TO EACH PLAYER
         }
     }
     CHECK_EQ(PlayerTHREE.coins(), 6);
@@ -172,12 +179,12 @@ TEST_CASE("Assassination with more than 7 coins") {
            CHECK_NOTHROW( Players.at(i)->income());
         }
     }
-    CHECK_NOTHROW(assassin.coup(duke));
-    CHECK_EQ(assassin.coins(), 2);
-    CHECK_EQ(scenario4.players().size(), 2);
-    CHECK_NOTHROW(contessa.block(assassin));
+    CHECK_NOTHROW(assassin.coup(duke)); // Assassin can coup with 3 coins
+    CHECK_EQ(assassin.coins(), 2); // The coup cost the assassin only 3 coins.
+    CHECK_EQ(scenario4.players().size(), 2); // Player THREE is out of the game
+    CHECK_NOTHROW(contessa.block(assassin)); // Player THREE is back in the game
     CHECK_EQ(scenario4.players().size(), 3);
-    CHECK_EQ(assassin.coins(), 2);
+    CHECK_EQ(assassin.coins(), 2); // The block of the contessa DID NOT refund the assassin.
     CHECK_NOTHROW(contessa.income()); 
     CHECK_NOTHROW(duke.income());
     for (size_t j = 0; j < 3; j++)
@@ -191,14 +198,14 @@ TEST_CASE("Assassination with more than 7 coins") {
             }
         }
     }
-    CHECK_EQ(assassin.coins(), 8);
+    CHECK_EQ(assassin.coins(), 8); // Assassin has now 8 coins, so he can coup without being blocked by contessa.
     CHECK_EQ(scenario4.players().size(), 3);
-    CHECK_NOTHROW(assassin.coup(duke));
-    CHECK_EQ(assassin.coins(), 1);
+    CHECK_NOTHROW(assassin.coup(duke)); // Player THREE is out of the game
+    CHECK_EQ(assassin.coins(), 1); // The coup cost the assassin 7 coins and is unblockable.
     CHECK_EQ(scenario4.players().size(), 2);
     CHECK_THROWS(contessa.block(assassin)); // Read explanation at lines 158-160
-    CHECK_EQ(scenario4.players().size(), 2);
-    CHECK_EQ(assassin.coins(), 1);
+    CHECK_EQ(scenario4.players().size(), 2); // Player THREE is still out of the game, the contessa couldn't block the assassin
+    CHECK_EQ(assassin.coins(), 1); 
 }
 
 TEST_CASE("Ambassador transfer test") {
@@ -229,7 +236,7 @@ TEST_CASE("Ambassador transfer test") {
     CHECK_EQ(duke.coins(), 5);
     assassin.income();
     CHECK_EQ(assassin.coins(), 6);
-    CHECK_NOTHROW(ambassador.transfer(assassin, duke));
+    CHECK_NOTHROW(ambassador.transfer(assassin, duke)); // transfer one coin from assassin to duke
     CHECK_EQ(assassin.coins(), 5);
     CHECK_EQ(ambassador.coins(), 5);
     CHECK_EQ(duke.coins(), 6);
