@@ -25,7 +25,6 @@ TEST_CASE("GAME SCENARIO 1") {
 
     CHECK_EQ(PlayerTWO.role(), "Assassin");
     CHECK_EQ(PlayerONE.role(), PlayerTHREE.role());
-    CHECK_NE(PlayerONE.getNickname(), PlayerTHREE.getNickname());
 
     CHECK_EQ(scenario1.players().size(), 4);
     CHECK_NOTHROW(PlayerONE.income());
