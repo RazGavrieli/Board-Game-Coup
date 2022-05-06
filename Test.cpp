@@ -24,15 +24,14 @@ TEST_CASE("GAME SCENARIO 1") {
     vector<Player*> Players = {&PlayerONE, &PlayerTWO, &PlayerTHREE, &PlayerFOUR};
 
     CHECK_EQ(PlayerTWO.role(), "Assassin");
-    CHECK_EQ(PlayerONE.role(), PlayerTHREE.role());
+    CHECK_EQ(PlayerONE.role(), PlayerTHREE.role()); // TWo players can have the same role
 
     CHECK_EQ(scenario1.players().size(), 4);
     CHECK_NOTHROW(PlayerONE.income());
-    CHECK_THROWS(PlayerTHREE.income());
+    CHECK_THROWS(PlayerTHREE.income()); // Its Player Two's turn
 
     CHECK_EQ(PlayerONE.coins(), 1);
     CHECK_EQ(PlayerTHREE.coins(), 0);
-    //PlayerTWO.income();
     for (size_t i = 1; i < Players.size(); i++)
     {
         CHECK_NOTHROW(Players.at(i)->income());
@@ -47,29 +46,28 @@ TEST_CASE("GAME SCENARIO 1") {
 
     for (size_t i = 0; i < Players.size(); i++)
     {
-        CHECK_EQ(Players.at(i)->coins(), 3);
+        CHECK_EQ(Players.at(i)->coins(), 3); // everyone has 3 coins
     }
 
-    CHECK_THROWS(PlayerONE.coup(PlayerTWO));
+    CHECK_THROWS(PlayerONE.coup(PlayerTWO)); // Player ONE doesn't have enough coins to coup
     CHECK_NOTHROW(PlayerONE.tax());
-    CHECK_NOTHROW(PlayerTWO.coup(PlayerONE));
-    CHECK_EQ(scenario1.players().size(), 3);
+    CHECK_NOTHROW(PlayerTWO.coup(PlayerONE)); // Player TWO is an assassin and can coup with 3 coins
+    CHECK_EQ(scenario1.players().size(), 3); // Player ONE is out of the game
     CHECK_EQ(PlayerTHREE.coins(), 3);
     CHECK_NOTHROW(PlayerTHREE.tax());
     CHECK_EQ(PlayerTHREE.coins(), 6);
-    CHECK_THROWS(PlayerTWO.income());
-    CHECK_NOTHROW(PlayerFOUR.block(PlayerTWO));
-    CHECK_EQ(scenario1.players().size(), 4);
-    CHECK_THROWS(PlayerTWO.income());
+    CHECK_THROWS(PlayerTWO.income()); // Its not Player TWO's turn
+    CHECK_NOTHROW(PlayerFOUR.block(PlayerTWO)); // Contessa blocks the coup and ..
+    CHECK_EQ(scenario1.players().size(), 4); // .. Player One Returns to the game
+    CHECK_THROWS(PlayerTWO.income()); // Its not Player TWO's turn, Keep in mind that PLayer one returns to the same order
     CHECK_EQ(PlayerONE.coins(), 6);
     PlayerFOUR.foreign_aid();
     CHECK_NOTHROW(PlayerONE.income());
     CHECK_EQ(PlayerONE.coins(), 7);
     CHECK_THROWS(PlayerTWO.coup(PlayerFOUR)); // not enough coins
-    //CHECK_THROWS(PlayerTWO.tax());
     CHECK_NOTHROW(PlayerTWO.foreign_aid());
-    CHECK_THROWS(PlayerTHREE.block(PlayerONE));
-    CHECK_NOTHROW(PlayerTHREE.block(PlayerTWO));
+    CHECK_THROWS(PlayerTHREE.block(PlayerONE)); // Player THREE can't block income which is Player ONE's last move
+    CHECK_NOTHROW(PlayerTHREE.block(PlayerTWO)); // Player THREE can block Player TWO's foreign aid.
     CHECK_NOTHROW(PlayerTHREE.tax());
     PlayerFOUR.foreign_aid();
     PlayerONE.income();
@@ -98,8 +96,7 @@ TEST_CASE("GAME SCENARIO 2") {
 
     CHECK_EQ(scenario2.players().size(), 3);
     CHECK_NOTHROW(PlayerONE.tax()); // 3 (COINS)
-    //CHECK_THROWS(PlayerTWO.tax()); 
-    CHECK_THROWS(PlayerTHREE.income()); 
+    CHECK_THROWS(PlayerTHREE.income());  // Player TWO's turn. Not THREE's
     CHECK_NOTHROW(PlayerTWO.income());// 1 (COINS)
     CHECK_EQ(PlayerTWO.coins(), 1);
     CHECK_NOTHROW(PlayerTHREE.steal(PlayerTWO));  // THREE 1, TWO 0 (COINS)
@@ -117,7 +114,7 @@ TEST_CASE("GAME SCENARIO 2") {
     CHECK_EQ(PlayerTWO.coins(), 5);
     CHECK_EQ(PlayerONE.coins(), 8);
     CHECK_NOTHROW(PlayerONE.coup(PlayerTHREE));
-    CHECK_THROWS(scenario2.winner());
+    CHECK_THROWS(scenario2.winner()); // Game not over
     CHECK_EQ(PlayerONE.coins(), 1);
     CHECK_EQ(scenario2.players().size(), 2);
     CHECK_THROWS(PlayerTWO.coup(PlayerTHREE)); // PLAYER THREE ALREADY DEAD
@@ -199,7 +196,7 @@ TEST_CASE("Assassination with more than 7 coins") {
     CHECK_NOTHROW(assassin.coup(duke));
     CHECK_EQ(assassin.coins(), 1);
     CHECK_EQ(scenario4.players().size(), 2);
-    CHECK_THROWS(contessa.block(assassin));
+    CHECK_THROWS(contessa.block(assassin)); // Read explanation at lines 158-160
     CHECK_EQ(scenario4.players().size(), 2);
     CHECK_EQ(assassin.coins(), 1);
 }
@@ -214,7 +211,7 @@ TEST_CASE("Ambassador transfer test") {
     Duke duke{scenario5, "Player THREE"};
     std::vector<Player*> Players = {&assassin, &ambassador, &duke};
     assassin.income();
-    CHECK_THROWS(ambassador.transfer(duke, assassin)); // not his turn
+    CHECK_THROWS(ambassador.transfer(duke, assassin)); // not enough money to transfer from duke, you can't transfer zero coins
     ambassador.income();
     duke.income();
     CHECK_EQ(assassin.coins(), 1);
