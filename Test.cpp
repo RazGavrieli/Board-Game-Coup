@@ -1,5 +1,5 @@
 /**
- * Test file to check the correctness of a Matrix class
+ * Test file to check the correctness of coup game
  *
  * @author Raz Gavrieli -> razgavrieli@gmail.com
  * @since 2022-04
